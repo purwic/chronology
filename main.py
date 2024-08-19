@@ -1,7 +1,10 @@
+import math
+
 from customtkinter import *
 
-
 seconds_in_absolute_year = 31558149.984384
+days_in_absolute_year = seconds_in_absolute_year / 86400
+
 
 def count_seconds(after, yy, dd, hh, mm, ss):
     """
@@ -64,13 +67,33 @@ def update(event):
             seconds = count_seconds(False, years, days, hours, minutes, seconds)
 
         absolute_years = seconds / seconds_in_absolute_year
+        absolute_days = seconds / 86400
+
+        years_ = math.floor(absolute_years)
+        days_ = math.floor((absolute_years - years_) * days_in_absolute_year)
+
+        """
+        for s in f"{absolute_years}":
+            if s == '.':
+                break
+            years_str += s
+
+        days_str = ""
+
+        for s in f"{seconds_in_absolute_year / 86400 * (absolute_years - int(years_str))}":
+            if s == '.':
+                break
+            days_str += s
+        """
+
 
         # answer_label.configure(text=seconds / 86400)
-        answer_label.configure(text=absolute_years)
+        rounded_absolute_years_label.configure(text=years_)
+        rounded_absolute_days_label.configure(text=days_)
+        absolute_years_label.configure(text=absolute_years)
 
     except:
         pass
-
 
 
 set_appearance_mode("System")
@@ -84,27 +107,32 @@ app.resizable(0, 0)
 label = CTkLabel(app, text="From default chronology to absolute", font=("Arial", 18))
 label.pack()
 
-years_entry = CTkEntry(app)
+years_entry = CTkEntry(app, placeholder_text="th year")
 years_entry.pack()
 
-days_entry = CTkEntry(app)
+days_entry = CTkEntry(app, placeholder_text="th day")
 days_entry.pack()
 
-hours_entry = CTkEntry(app)
+hours_entry = CTkEntry(app, placeholder_text="hours")
 hours_entry.pack()
 
-minutes_entry = CTkEntry(app)
+minutes_entry = CTkEntry(app, placeholder_text="minutes")
 minutes_entry.pack()
 
-seconds_entry = CTkEntry(app)
+seconds_entry = CTkEntry(app, placeholder_text="seconds")
 seconds_entry.pack()
 
 is_combobox = CTkComboBox(app, values=["н.э.", "до н.э."], command=update)
 is_combobox.pack()
 
-answer_label = CTkLabel(app, text="")
-answer_label.pack()
+rounded_absolute_years_label = CTkLabel(app, text="")
+rounded_absolute_years_label.pack()
 
+rounded_absolute_days_label = CTkLabel(app, text="")
+rounded_absolute_days_label.pack()
+
+absolute_years_label = CTkLabel(app, text="")
+absolute_years_label.pack()
 
 years_entry.bind("<KeyRelease>", update)
 days_entry.bind("<KeyRelease>", update)
